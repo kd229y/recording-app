@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>錄音器 App</title>
+</head>
+<body>
+    <h1>錄音器 App</h1>
+    <button id="start">開始錄音</button>
+    <button id="stop" disabled>停止錄音</button>
+    <audio id="audio" controls></audio>
+    <form id="upload-form" style="display: none;" method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="audio_data" id="audio-data" />
+    </form>
+
+    <script>
+        let mediaRecorder;
+        const audioChunks = [];
+
+        document.getElementById('start').addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.start();
+            document.getElementById('start').disabled = true;
+            document.getElementById('stop').disabled = false;
+
+            mediaRecorder.addEventListener('dataavailable', event => {
+                audioChunks.push(event.data);
+            });
+
+            mediaRecorder.addEventListener('stop', () => {
+                const audioBlob = new Blob(audioChunks);
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById('audio').src = audioUrl;
+
+                const file = new File([audioBlob], 'recording.wav', { type: 'audio/wav' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                const input = document.getElementById('audio-data');
+                input.files = dataTransfer.files;
+                document.getElementById('upload-form').submit();
+            });
+        });
+
+        document.getElementById('stop').addEventListener('click', () => {
+            mediaRecorder.stop();
+            document.getElementById('start').disabled = false;
+            document.getElementById('stop').disabled = true;
+        });
+    </script>
+</body>
+</html>
