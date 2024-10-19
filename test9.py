@@ -8,7 +8,7 @@ import google.generativeai as genai
 app = Flask(__name__)
 
 # Suno API 基本配置
-base_url = 'https://suno-tnavkqq27-makoto-0426s-projects.vercel.app'
+base_url = 'https://suno-41ej7oknv-makoto-0426s-projects.vercel.app/'
 
 # Suno API 函數
 def custom_generate_audio(payload):
@@ -39,7 +39,7 @@ def get_quota_information():
 # Flask 路由與功能
 @app.route('/upload', methods=['POST'])
 def upload_audio():
-     # 接收並保存上傳的音頻文件
+    # 接收並保存上傳的音頻文件
     audio_file = request.files['file']
     audio_path = f'./uploads/{audio_file.filename}'
     audio_file.save(audio_path)
@@ -50,7 +50,6 @@ def upload_audio():
     
     # 打印返回的結果以查看其結構
     print(suno_response)
-
     # 假設 suno_response 是一個列表，訪問其中的音樂ID
     if isinstance(suno_response, list) and len(suno_response) > 0:
         audio_ids = ','.join([item['id'] for item in suno_response])
@@ -79,7 +78,7 @@ def generate_prompt(audio_path):
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
     # 生成描述音頻的 prompt
-    prompt = "Carefully listen to the following audio file, and generate a prompt that can produce music similar to this piece, and the prompt should including this sentence:do not generate any people voice"
+    prompt = "Carefully listen to the following audio file, and generate a prompt that can produce music similar to this piece"
 
     # 使用 Gemini API 生成 prompt
     generation_config = {
@@ -103,7 +102,7 @@ def generate_prompt(audio_path):
 def send_to_suno(prompt):
     # 發送 prompt 到 Suno API 生成音頻
     suno_url = f'{base_url}/api/generate'
-    response = requests.post(suno_url, json={"prompt": prompt})
+    response = requests.post(suno_url, json={"prompt": prompt,"make_instrumental":False})
     return response.json()
 
 @app.route('/', methods=['GET'])
