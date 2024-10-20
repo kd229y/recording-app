@@ -7,8 +7,8 @@ import google.generativeai as genai
 # Flask 應用設置
 app = Flask(__name__, static_folder='static')
 
-# Suno API 基本配置
-base_url = 'https://suno-api3-bksggpsz2-makoto-0426s-projects.vercel.app'
+#只有50個credit
+base_url = 'https://suno-5r8lxgst8-makoto-0426s-projects.vercel.app/'
 
 # Suno API 函數
 def custom_generate_audio(payload):
