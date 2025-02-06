@@ -112,7 +112,7 @@ def submit_prompt():
 
 def generate_prompt(audio_path):
     # 配置 Gemini API 密鑰
-    os.environ["GEMINI_API_KEY"] = "AIzaSyDO_ycHSv7zjKEYVN1JHvy2LirqTOBy8_E"
+    os.getenv("GEMINI_API_KEY")
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
     # 生成描述音頻的 prompt
