@@ -118,8 +118,6 @@ def generate_prompt(audio_path):
     if not gemini_api_key:
         raise ValueError("Missing GEMINI_API_KEY in environment variables")
     genai.configure(api_key=gemini_api_key)
-    #os.environ["GEMINI_API_KEY"] = "AIzaSyDO_ycHSv7zjKEYVN1JHvy2LirqTOBy8_E"
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
     # 生成描述音頻的 prompt
     prompt = "Carefully listen to the following audio file, and generate a prompt that can produce music similar to this piece"
