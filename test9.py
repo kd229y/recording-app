@@ -3,6 +3,7 @@ import requests
 from flask import Flask, request, render_template_string
 import os
 import google.generativeai as genai
+from dotenv import load_dotenv
 
 # Flask 應用設置
 app = Flask(__name__, static_folder='static')
@@ -112,7 +113,12 @@ def submit_prompt():
 
 def generate_prompt(audio_path):
     # 配置 Gemini API 密鑰
-    os.environ["GEMINI_API_KEY"] = "AIzaSyDO_ycHSv7zjKEYVN1JHvy2LirqTOBy8_E"
+    load_dotenv()
+    gemini_api_key = os.getenv("key")
+    if not gemini_api_key:
+        raise ValueError("Missing GEMINI_API_KEY in environment variables")
+    genai.configure(api_key=gemini_api_key)
+    #os.environ["GEMINI_API_KEY"] = "AIzaSyDO_ycHSv7zjKEYVN1JHvy2LirqTOBy8_E"
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
     # 生成描述音頻的 prompt
